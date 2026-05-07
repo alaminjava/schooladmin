@@ -6335,3 +6335,193 @@ html:not([data-theme="dark"]) .dashboard-hero .hero-copy {
 .metric-watermark {
   display: none !important;
 }
+
+/* Mobile dashboard fit: keep controls on one row and reduce oversized hero blocks. */
+@media (max-width: 720px) {
+  .erp-topbar.clean-topbar {
+    gap: 10px !important;
+    padding: 12px !important;
+  }
+
+  .topbar-title h2 {
+    gap: 10px !important;
+    font-size: 20px !important;
+    line-height: 1.15 !important;
+  }
+
+  .topbar-title .title-icon {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 14px !important;
+  }
+
+  .topbar-title small {
+    margin-top: 4px !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+  }
+
+  .topbar-actions {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 42px 42px !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  .mobile-nav {
+    min-height: 42px !important;
+    height: 42px !important;
+    border-radius: 14px !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+  }
+
+  .btn.icon-btn,
+  .topbar-user-chip {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    border-radius: 14px !important;
+  }
+
+  .btn.icon-btn span,
+  .topbar-user-chip strong,
+  .topbar-user-chip .menu-chevron {
+    display: none !important;
+  }
+
+  .topbar-user-chip .profile-avatar.small {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .user-menu {
+    justify-self: end !important;
+  }
+
+  .user-menu-panel {
+    right: 0 !important;
+    left: auto !important;
+    width: min(240px, calc(100vw - 24px)) !important;
+  }
+
+  .content-area {
+    padding: 12px !important;
+  }
+
+  .dashboard-stack {
+    gap: 14px !important;
+  }
+
+  .dashboard-hero.panel {
+    gap: 18px !important;
+    padding: 18px !important;
+    border-radius: 20px !important;
+  }
+
+  .dashboard-hero .eyebrow {
+    font-size: 11px !important;
+    letter-spacing: 0.11em !important;
+  }
+
+  .dashboard-hero h1 {
+    margin-top: 8px !important;
+    font-size: clamp(26px, 8.8vw, 34px) !important;
+    line-height: 1.12 !important;
+  }
+
+  .dashboard-hero .hero-copy {
+    margin-top: 12px !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .hero-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    margin-top: 18px !important;
+  }
+
+  .hero-btn {
+    width: 100% !important;
+    min-height: 46px !important;
+    justify-content: center !important;
+    border-radius: 14px !important;
+    padding-inline: 14px !important;
+  }
+
+  .collection-card {
+    min-height: 0 !important;
+    gap: 16px !important;
+    padding: 18px !important;
+    border-radius: 20px !important;
+  }
+
+  .collection-copy span {
+    font-size: 12px !important;
+    letter-spacing: 0.10em !important;
+  }
+
+  .collection-copy strong {
+    margin-top: 8px !important;
+    font-size: clamp(42px, 14vw, 56px) !important;
+  }
+
+  .collection-copy small {
+    gap: 6px !important;
+    margin-top: 10px !important;
+    font-size: 12px !important;
+  }
+
+  .collection-ring {
+    width: 78px !important;
+    height: 78px !important;
+  }
+
+  .collection-ring::before {
+    inset: 9px !important;
+  }
+
+  .collection-ring .dashboard-icon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .stats-grid,
+  .premium-stats {
+    gap: 12px !important;
+  }
+
+  .stats-grid .metric-card,
+  .premium-stats .metric-card,
+  .metric-card {
+    min-height: 126px !important;
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .quick-card,
+  .market-snapshot.quick-summary-card,
+  .quick-summary-card {
+    border-radius: 18px !important;
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .topbar-title small {
+    display: none !important;
+  }
+
+  .erp-topbar.clean-topbar {
+    position: sticky !important;
+  }
+
+  .dashboard-hero.panel {
+    padding: 16px !important;
+  }
+}
