@@ -7,6 +7,7 @@
     "client": "vite --config client/vite.config.js",
     "dev": "node scripts/dev.js",
     "server": "node server/server.js",
+    "prebuild": "node scripts/ensure-deps.js",
     "build": "vite build --config client/vite.config.js",
     "lint": "eslint .",
     "preview": "vite preview --config client/vite.config.js",
