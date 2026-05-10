@@ -755,6 +755,10 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
     setModal(type);
   }
 
+  function showDoneAlert(message) {
+    setSuccess(`Done! ${message}`);
+  }
+
   async function handleDelete(type, id) {
     if (!window.confirm("Are you sure you want to delete this record?")) return;
     setError("");
@@ -766,7 +770,7 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
       if (type === "mark") await erpApi.deleteMark(token, id);
       if (type === "routine") await erpApi.deleteRoutine(token, id);
       if (type === "increment") await erpApi.deleteIncrement(token, id);
-      setSuccess("Record deleted successfully.");
+      showDoneAlert("Record deleted successfully.");
       await refresh();
     } catch (err) {
       setError(getErrorMessage(err));
@@ -786,7 +790,7 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
     try {
       if (modal === "classFee") {
         editingId ? await erpApi.updateClassFee(token, editingId, form) : await erpApi.createClassFee(token, form);
-        setSuccess(editingId ? "Class fee rule updated." : "Class fee rule created.");
+        showDoneAlert(editingId ? "Class fee rule updated." : "Class fee rule created.");
       }
       if (modal === "student") {
         const payload = {
@@ -799,11 +803,11 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           admissionDate: form.admissionDate,
         };
         editingId ? await erpApi.updateStudent(token, editingId, payload) : await erpApi.createStudent(token, payload);
-        setSuccess(editingId ? "Student updated." : "Student added with admission and session fees.");
+        showDoneAlert(editingId ? "Student updated." : "Student added with admission and session fees.");
       }
       if (modal === "payment") {
         const { data: response } = editingId ? await erpApi.updatePayment(token, editingId, form) : await erpApi.createPayment(token, form);
-        setSuccess(editingId ? "Student payment updated. Receipt opened for PDF/print." : "Student payment recorded. Receipt opened for PDF/print.");
+        showDoneAlert(editingId ? "Student payment updated. Receipt opened for PDF/print." : "Student payment recorded. Receipt opened for PDF/print.");
         if (response.payment && !writePrintDocument(receiptWindow, studentPaymentReceiptHtml(response.payment, schoolSettings))) {
           setError("Popup was blocked. Use the PDF button in the payment ledger.");
         }
@@ -822,42 +826,42 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           contactInfo: { phone: form.phone, email: form.email, address: form.address },
         };
         editingId ? await erpApi.updateEmployee(token, editingId, payload) : await erpApi.createEmployee(token, payload);
-        setSuccess(editingId ? "Employee updated." : "Employee added.");
+        showDoneAlert(editingId ? "Employee updated." : "Employee added.");
       }
       if (modal === "salary") {
         const { data: response } = await erpApi.createSalary(token, form);
-        setSuccess("Salary payment recorded. Receipt opened for PDF/print.");
+        showDoneAlert("Salary payment recorded. Receipt opened for PDF/print.");
         if (response.salary && !writePrintDocument(receiptWindow, salaryPaymentReceiptHtml(response.salary, schoolSettings))) {
           setError("Popup was blocked. Use the PDF button in the salary ledger.");
         }
       }
       if (modal === "monthlyFees") {
         const { data: response } = await erpApi.generateMonthlyFees(token, form);
-        setSuccess(`${response.created} monthly fee records generated.`);
+        showDoneAlert(`${response.created} monthly fee records generated.`);
       }
       if (modal === "examFees") {
         const { data: response } = await erpApi.generateExamFees(token, form);
-        setSuccess(`${response.created} exam fee records generated.`);
+        showDoneAlert(`${response.created} exam fee records generated.`);
       }
       if (modal === "monthlySalaries") {
         const { data: response } = await erpApi.generateSalaries(token, form);
-        setSuccess(`${response.created} salary records generated.`);
+        showDoneAlert(`${response.created} salary records generated.`);
       }
       if (modal === "mark") {
         editingId ? await erpApi.updateMark(token, editingId, form) : await erpApi.createMark(token, form);
-        setSuccess(editingId ? "Mark updated." : "Mark entered.");
+        showDoneAlert(editingId ? "Mark updated." : "Mark entered.");
       }
       if (modal === "routine") {
         editingId ? await erpApi.updateRoutine(token, editingId, form) : await erpApi.createRoutine(token, form);
-        setSuccess(editingId ? "Class routine updated." : "Class routine created.");
+        showDoneAlert(editingId ? "Class routine updated." : "Class routine created.");
       }
       if (modal === "increment") {
         editingId ? await erpApi.updateIncrement(token, editingId, form) : await erpApi.createIncrement(token, form);
-        setSuccess(editingId ? "Salary increment updated." : "Salary increment recorded.");
+        showDoneAlert(editingId ? "Salary increment updated." : "Salary increment recorded.");
       }
       if (modal === "schoolSettings") {
         await erpApi.updateSchoolSettings(token, form);
-        setSuccess("School settings updated.");
+        showDoneAlert("School settings updated.");
       }
       if (modal === "userSettings") {
         if (form.newPassword && form.newPassword !== form.confirmPassword) {
@@ -872,7 +876,7 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
         };
         const { data: response } = await erpApi.updateProfile(token, payload);
         onUserUpdate?.(response.user);
-        setSuccess("Profile updated.");
+        showDoneAlert("Profile updated.");
       }
 
       setModal(null);
@@ -1565,7 +1569,13 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
   return (
     <AdminLayout activeView={activeView} onLogout={onLogout} onOpenUserSettings={() => openModal("userSettings")} onThemeChange={setTheme} onViewChange={setActiveView} theme={theme} user={user}>
       {error && <p className="alert error">{error}</p>}
-      {success && <p className="alert success">{success}</p>}
+      {success && (
+        <div className="done-alert" role="status" aria-live="polite">
+          <strong>Done</strong>
+          <span>{success.replace(/^Done!\s*/, "")}</span>
+          <button aria-label="Dismiss done alert" type="button" onClick={() => setSuccess("")}>x</button>
+        </div>
+      )}
       {loading ? <p className="panel">Loading ERP data...</p> : (
         <>
           {activeView === "dashboard" && renderDashboard()}
