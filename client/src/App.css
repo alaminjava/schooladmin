@@ -6525,3 +6525,401 @@ html:not([data-theme="dark"]) .dashboard-hero .hero-copy {
     padding: 16px !important;
   }
 }
+
+/* Sticky navigation and all-page responsive stabilization */
+html {
+  scroll-padding-top: 84px;
+}
+
+body {
+  width: 100%;
+  min-width: 0;
+}
+
+#root,
+.pro-home,
+.auth-page,
+.erp-shell,
+.erp-main,
+.content-area {
+  min-width: 0 !important;
+}
+
+.pro-home-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 120 !important;
+  width: 100% !important;
+}
+
+.erp-sidebar.premium-sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 90 !important;
+}
+
+.erp-topbar.clean-topbar {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 110 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.topbar-title,
+.topbar-actions,
+.section-header,
+.section-header > div,
+.table-toolbar,
+.table-toolbar > div,
+.action-row,
+.modal-header,
+.modal-actions,
+.hero-actions,
+.pro-brand,
+.pro-nav,
+.footer-owner,
+.profile-photo-editor {
+  min-width: 0 !important;
+}
+
+.topbar-title h2,
+.section-header h2,
+.table-toolbar h3,
+.quick-card h3,
+.settings-card h3,
+.pro-brand strong,
+.pro-nav a,
+.btn,
+.control,
+.status,
+.grade-badge,
+.result-status {
+  overflow-wrap: anywhere;
+}
+
+.topbar-title small,
+.section-header p,
+.table-toolbar p,
+.quick-card p,
+.info-card p,
+.settings-card p,
+.pro-feature-grid p,
+.workflow-list span,
+.snapshot-list span,
+.report-student-strip,
+.report-result-strip {
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+}
+
+.btn,
+.control,
+.topbar-user-chip,
+.demo-row-button,
+.pro-header-action,
+.pro-primary-link,
+.pro-secondary-link {
+  max-width: 100%;
+}
+
+.table-card,
+.report-preview-table-wrap {
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-card table,
+.report-preview-table {
+  width: 100%;
+  min-width: 720px !important;
+}
+
+.form-grid,
+.profile-grid,
+.settings-meta-grid,
+.result-filter-grid,
+.business-rules-grid,
+.catalog-grid,
+.stats-grid,
+.premium-stats,
+.quick-action-grid,
+.snapshot-list,
+.pro-feature-grid,
+.workflow-demo-section,
+.pro-home-footer {
+  min-width: 0 !important;
+}
+
+.form-field,
+.form-field > *,
+.auth-field,
+.auth-field > *,
+.result-filter-grid > *,
+.settings-meta-grid > *,
+.business-rules-grid > *,
+.catalog-grid > *,
+.stats-grid > *,
+.premium-stats > *,
+.quick-action-grid > *,
+.snapshot-list > *,
+.pro-feature-grid > *,
+.workflow-demo-section > *,
+.pro-home-footer > * {
+  min-width: 0 !important;
+}
+
+@media (max-width: 1180px) {
+  .erp-shell {
+    --sidebar-width: 248px;
+  }
+
+  .erp-sidebar.premium-sidebar {
+    width: var(--sidebar-width) !important;
+    min-width: var(--sidebar-width) !important;
+  }
+
+  .erp-main {
+    padding-left: calc(var(--sidebar-width) + 24px) !important;
+  }
+
+  .dashboard-hero.panel,
+  .quick-summary-card,
+  .market-snapshot.quick-summary-card,
+  .settings-summary,
+  .compact-workflow,
+  .workflow-demo-section,
+  .login-first-hero {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 960px) {
+  html {
+    scroll-padding-top: 136px;
+  }
+
+  .erp-sidebar.premium-sidebar {
+    display: none !important;
+  }
+
+  .erp-main,
+  .sidebar-collapsed .erp-main {
+    padding-left: 0 !important;
+  }
+
+  .erp-topbar.clean-topbar {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    padding: 12px 14px !important;
+    border-radius: 0 !important;
+  }
+
+  .topbar-actions {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto auto !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+
+  .mobile-nav {
+    display: block !important;
+    min-width: 0 !important;
+  }
+
+  .section-header,
+  .table-toolbar {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    align-items: stretch !important;
+  }
+
+  .section-header .action-row,
+  .table-toolbar .action-row {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+    width: 100% !important;
+  }
+
+  .content-area {
+    padding: 14px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  html {
+    scroll-padding-top: 128px;
+  }
+
+  .pro-home-header {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    gap: 10px !important;
+    align-items: center !important;
+    padding: 10px 14px !important;
+  }
+
+  .pro-brand {
+    gap: 9px !important;
+  }
+
+  .pro-brand > span {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 12px !important;
+  }
+
+  .pro-brand small {
+    display: none !important;
+  }
+
+  .pro-nav {
+    grid-column: 1 / -1;
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    padding-bottom: 2px !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pro-nav a {
+    flex: 0 0 auto !important;
+    min-height: 38px !important;
+    padding: 8px 10px !important;
+    white-space: nowrap !important;
+  }
+
+  .pro-header-action {
+    min-height: 40px !important;
+    padding: 0 12px !important;
+    white-space: nowrap !important;
+  }
+
+  .pro-hero,
+  .pro-section {
+    padding-inline: 14px !important;
+  }
+
+  .hero-login-card,
+  .auth-card {
+    border-radius: 20px !important;
+    padding: 20px !important;
+  }
+
+  .pro-metrics,
+  .pro-hero-actions,
+  .hero-actions,
+  .modal-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .pro-metrics span,
+  .pro-primary-link,
+  .pro-secondary-link,
+  .hero-btn,
+  .modal-actions .btn {
+    width: 100% !important;
+  }
+
+  .dashboard-hero.panel,
+  .collection-card,
+  .quick-card,
+  .quick-summary-card,
+  .market-snapshot.quick-summary-card,
+  .settings-card,
+  .settings-summary,
+  .info-card,
+  .panel {
+    border-radius: 18px !important;
+  }
+
+  .table-card table,
+  .report-preview-table {
+    min-width: 640px !important;
+  }
+
+  .report-preview-card {
+    padding: 14px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  html {
+    scroll-padding-top: 122px;
+  }
+
+  .erp-topbar.clean-topbar {
+    gap: 10px !important;
+    padding: 10px !important;
+  }
+
+  .topbar-title h2 {
+    font-size: 19px !important;
+  }
+
+  .topbar-title small {
+    display: none !important;
+  }
+
+  .topbar-actions {
+    grid-template-columns: minmax(0, 1fr) 42px 42px !important;
+  }
+
+  .btn.icon-btn,
+  .topbar-user-chip {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+  }
+
+  .content-area {
+    padding: 10px !important;
+  }
+
+  .section-header,
+  .table-toolbar,
+  .modal-header,
+  .modal-body {
+    padding: 14px !important;
+  }
+
+  .section-header .action-row,
+  .table-toolbar .action-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form-grid,
+  .profile-grid,
+  .settings-grid,
+  .settings-meta-grid,
+  .result-filter-grid,
+  .business-rules-grid,
+  .catalog-grid,
+  .stats-grid,
+  .premium-stats,
+  .quick-action-grid,
+  .snapshot-list,
+  .pro-feature-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .auth-page.single {
+    padding: 12px !important;
+  }
+
+  .auth-card-wrap {
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .table-card table,
+  .report-preview-table {
+    min-width: 560px !important;
+  }
+}
