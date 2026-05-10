@@ -65,6 +65,7 @@ function Icon({ name }) {
     user: <><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 21c.8-4.2 3.5-6.5 8-6.5s7.2 2.3 8 6.5"/></>,
     help: <><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.6 2.6 0 0 1 4.8 1.4c0 1.9-2.4 2.1-2.4 4"/><path d="M12 18h.01"/></>,
     logout: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></>,
+    close: <><path d="m6 6 12 12"/><path d="M18 6 6 18"/></>,
   };
   return <svg {...props}>{icons[name] || icons.dashboard}</svg>;
 }
@@ -99,6 +100,7 @@ function UserAvatar({ user, small = false }) {
 
 export default function AdminLayout({ activeView, children, onLogout, onOpenUserSettings, onThemeChange, onViewChange, theme = "light", user }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
   const visibleNavSections = navSections.map((section) => ({
@@ -107,6 +109,21 @@ export default function AdminLayout({ activeView, children, onLogout, onOpenUser
   })).filter((section) => section.items.length);
   const visibleNavItems = visibleNavSections.flatMap((section) => section.items);
   const activeItem = visibleNavItems.find((item) => item.key === activeView) || visibleNavItems[0] || navItems[0];
+  const shellClassName = [
+    isCollapsed ? "erp-shell sidebar-collapsed" : "erp-shell",
+    isMobileMenuOpen ? "mobile-menu-open" : "",
+    "bg-slate-100 text-slate-900",
+  ].filter(Boolean).join(" ");
+
+  const handleViewChange = (view) => {
+    onViewChange(view);
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    setIsMobileMenuOpen(false);
+    onLogout();
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -118,8 +135,25 @@ export default function AdminLayout({ activeView, children, onLogout, onOpenUser
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return undefined;
+
+    function handleEscape(event) {
+      if (event.key === "Escape") {
+        setIsMobileMenuOpen(false);
+      }
+    }
+
+    document.body.classList.add("app-mobile-menu-lock");
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.body.classList.remove("app-mobile-menu-lock");
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isMobileMenuOpen]);
+
   return (
-    <div className={isCollapsed ? "erp-shell sidebar-collapsed bg-slate-100 text-slate-900" : "erp-shell bg-slate-100 text-slate-900"}>
+    <div className={shellClassName}>
       <aside className="erp-sidebar premium-sidebar border-r border-white/60 bg-slate-950/95 shadow-2xl backdrop-blur-xl">
         <button aria-label={isCollapsed ? "Expand menu" : "Minimize menu"} className="sidebar-toggle fixed-toggle" type="button" onClick={() => setIsCollapsed((value) => !value)} title={isCollapsed ? "Expand menu" : "Minimize menu"}>
           <Icon name="collapse" />
@@ -141,7 +175,7 @@ export default function AdminLayout({ activeView, children, onLogout, onOpenUser
             <div className="nav-section" key={section.title}>
               <span className="nav-section-title">{section.title}</span>
               {section.items.map((item) => (
-                <button aria-label={item.label} data-label={item.label} className={activeView === item.key ? "nav-button active" : "nav-button"} key={item.key} type="button" onClick={() => onViewChange(item.key)} title={item.label}>
+                <button aria-label={item.label} data-label={item.label} className={activeView === item.key ? "nav-button active" : "nav-button"} key={item.key} type="button" onClick={() => handleViewChange(item.key)} title={item.label}>
                   <span className="nav-icon"><Icon name={item.icon} /></span>
                   <span className="nav-text">{item.label}</span>
                 </button>
@@ -151,11 +185,53 @@ export default function AdminLayout({ activeView, children, onLogout, onOpenUser
         </nav>
 
         <div className="sidebar-bottom-actions">
-          <button aria-label="Help" data-label="Help" className="nav-button" type="button" title="Help" onClick={() => onViewChange("settings")}>
+          <button aria-label="Help" data-label="Help" className="nav-button" type="button" title="Help" onClick={() => handleViewChange("settings")}>
             <span className="nav-icon"><Icon name="help" /></span>
             <span className="nav-text">Help</span>
           </button>
-          <button aria-label="Logout" data-label="Logout" className="nav-button logout-nav" type="button" title="Logout" onClick={onLogout}>
+          <button aria-label="Logout" data-label="Logout" className="nav-button logout-nav" type="button" title="Logout" onClick={handleLogout}>
+            <span className="nav-icon"><Icon name="logout" /></span>
+            <span className="nav-text">Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <button aria-label="Close navigation menu" className="mobile-menu-backdrop" type="button" onClick={() => setIsMobileMenuOpen(false)} />
+      <aside id="mobile-app-menu" aria-label="Mobile navigation" className="mobile-menu-drawer" aria-hidden={!isMobileMenuOpen}>
+        <div className="mobile-menu-head">
+          <div className="sidebar-user-simple">
+            <UserAvatar user={user} />
+            <div className="sidebar-user-copy">
+              <span>Hello</span>
+              <strong>{user?.name || "User"}</strong>
+              <small>{user?.role || "user"}</small>
+            </div>
+          </div>
+          <button aria-label="Close menu" className="mobile-menu-close" type="button" onClick={() => setIsMobileMenuOpen(false)}>
+            <Icon name="close" />
+          </button>
+        </div>
+
+        <nav className="mobile-menu-nav" aria-label="School modules on mobile">
+          {visibleNavSections.map((section) => (
+            <div className="nav-section" key={section.title}>
+              <span className="nav-section-title">{section.title}</span>
+              {section.items.map((item) => (
+                <button aria-label={item.label} data-label={item.label} className={activeView === item.key ? "nav-button active" : "nav-button"} key={item.key} type="button" onClick={() => handleViewChange(item.key)}>
+                  <span className="nav-icon"><Icon name={item.icon} /></span>
+                  <span className="nav-text">{item.label}</span>
+                </button>
+              ))}
+            </div>
+          ))}
+        </nav>
+
+        <div className="mobile-menu-footer">
+          <button className="nav-button" type="button" onClick={() => handleViewChange("settings")}>
+            <span className="nav-icon"><Icon name="help" /></span>
+            <span className="nav-text">Help</span>
+          </button>
+          <button className="nav-button logout-nav" type="button" onClick={handleLogout}>
             <span className="nav-icon"><Icon name="logout" /></span>
             <span className="nav-text">Logout</span>
           </button>
@@ -169,9 +245,10 @@ export default function AdminLayout({ activeView, children, onLogout, onOpenUser
             <small>{viewDescriptions[activeView]}</small>
           </div>
           <div className="topbar-actions flex flex-wrap items-center gap-3">
-            <select className="control mobile-nav" value={activeView} onChange={(event) => onViewChange(event.target.value)}>
-              {visibleNavItems.map((item) => <option key={item.key} value={item.key}>{item.label}</option>)}
-            </select>
+            <button className="mobile-nav-trigger" type="button" aria-expanded={isMobileMenuOpen} aria-controls="mobile-app-menu" onClick={() => setIsMobileMenuOpen(true)}>
+              <span className="nav-icon"><Icon name="menu" /></span>
+              <span className="mobile-nav-label">{activeItem.label}</span>
+            </button>
             <button className="btn icon-btn border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50" type="button" onClick={() => onThemeChange(theme === "dark" ? "light" : "dark")} title={theme === "dark" ? "Light mode" : "Dark mode"}>
               <Icon name={theme === "dark" ? "sun" : "moon"} />
               <span>{theme === "dark" ? "Light" : "Dark"}</span>
@@ -185,8 +262,8 @@ export default function AdminLayout({ activeView, children, onLogout, onOpenUser
               {isUserMenuOpen && (
                 <div className="user-menu-panel overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
                   <button type="button" onClick={() => { setIsUserMenuOpen(false); onOpenUserSettings(); }}><Icon name="user" /> Profile settings</button>
-                  <button type="button" onClick={() => { setIsUserMenuOpen(false); onViewChange("settings"); }}><Icon name="settings" /> App settings</button>
-                  <button type="button" onClick={onLogout}><Icon name="logout" /> Logout</button>
+                  <button type="button" onClick={() => { setIsUserMenuOpen(false); handleViewChange("settings"); }}><Icon name="settings" /> App settings</button>
+                  <button type="button" onClick={handleLogout}><Icon name="logout" /> Logout</button>
                 </div>
               )}
             </div>

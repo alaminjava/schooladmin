@@ -136,6 +136,11 @@ function DashboardIcon({ name, className = "" }) {
     clipboard: <><path d="M9 4h6l1 2h3v15H5V6h3l1-2Z" /><path d="M9 10h6" /><path d="M9 14h6" /><path d="M9 18h4" /></>,
     check: <><path d="M20 6 9 17l-5-5" /></>,
     chart: <><path d="M4 19V5" /><path d="M4 19h16" /><path d="M8 16v-5" /><path d="M12 16V8" /><path d="M16 16v-7" /></>,
+    profile: <><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /><path d="M4 21c.8-4.2 3.5-6.5 8-6.5s7.2 2.3 8 6.5" /><path d="M16 19h4" /></>,
+    edit: <><path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z" /><path d="m13.5 8.5 3 3" /></>,
+    delete: <><path d="M4 7h16" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M6 7l1 14h10l1-14" /><path d="M9 7V4h6v3" /></>,
+    pdf: <><path d="M6 3.5h8l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z" /><path d="M14 3.5v4h4" /><path d="M8 15h1.3a1.3 1.3 0 0 0 0-2.6H8V17" /><path d="M12 17v-4.6h1.1a2.3 2.3 0 0 1 0 4.6H12Z" /><path d="M16 17v-4.6h2" /><path d="M16 14.6h1.6" /></>,
+    settings: <><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" /><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.04.04a2 2 0 0 1-2.83 2.83l-.04-.04A1.7 1.7 0 0 0 15 19.37a1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.08A1.7 1.7 0 0 0 9 19.37a1.7 1.7 0 0 0-1.88.34l-.04.04a2 2 0 0 1-2.83-2.83l.04-.04A1.7 1.7 0 0 0 4.63 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.08A1.7 1.7 0 0 0 4.63 9a1.7 1.7 0 0 0-.34-1.88l-.04-.04a2 2 0 0 1 2.83-2.83l.04.04A1.7 1.7 0 0 0 9 4.63a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.08A1.7 1.7 0 0 0 15 4.63a1.7 1.7 0 0 0 1.88-.34l.04-.04a2 2 0 0 1 2.83 2.83l-.04.04A1.7 1.7 0 0 0 19.37 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.08A1.7 1.7 0 0 0 19.4 15Z" /></>,
   };
 
   return <svg {...props}>{icons[name] || icons.chart}</svg>;
@@ -171,6 +176,14 @@ function GradeBadge({ grade }) {
 function ResultStatus({ status }) {
   const safeStatus = String(status || "Incomplete weight");
   return <span className={`result-status ${safeStatus.toLowerCase().replaceAll(" ", "-")}`}>{safeStatus}</span>;
+}
+
+function ActionButton({ icon, label, tone = "soft", onClick }) {
+  return (
+    <button aria-label={label} className={`action-icon-btn ${tone}`} title={label} type="button" onClick={onClick}>
+      <DashboardIcon name={icon} />
+    </button>
+  );
 }
 
 
@@ -1092,9 +1105,9 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           { key: "status", label: "Status", render: (row) => <Status status={row.status} /> },
           { key: "actions", label: "Actions", render: (row) => (
             <div className="action-row compact">
-              <button className="btn soft" type="button" onClick={() => setProfileStudent(row)}>Profile</button>
-              {studentWriteAllowed && <button className="btn soft" type="button" onClick={() => openModal("student", row)}>Edit</button>}
-              {isAdmin && <button className="btn danger" type="button" onClick={() => handleDelete("student", row._id)}>Delete</button>}
+              <ActionButton icon="profile" label="View profile" onClick={() => setProfileStudent(row)} />
+              {studentWriteAllowed && <ActionButton icon="edit" label="Edit student" onClick={() => openModal("student", row)} />}
+              {isAdmin && <ActionButton icon="delete" label="Delete student" tone="danger" onClick={() => handleDelete("student", row._id)} />}
             </div>
           )},
         ]}
@@ -1126,8 +1139,8 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           { key: "examFee", label: "Exam", render: (row) => money.format(row.examFee || 0) },
           { key: "actions", label: "Actions", render: (row) => financeAllowed && (
             <div className="action-row compact">
-              <button className="btn soft" type="button" onClick={() => openModal("classFee", row)}>Edit</button>
-              {isAdmin && <button className="btn danger" type="button" onClick={() => handleDelete("classFee", row._id)}>Delete</button>}
+              <ActionButton icon="edit" label="Edit class rule" onClick={() => openModal("classFee", row)} />
+              {isAdmin && <ActionButton icon="delete" label="Delete class rule" tone="danger" onClick={() => handleDelete("classFee", row._id)} />}
             </div>
           )},
         ]}
@@ -1143,10 +1156,10 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           { key: "status", label: "Status", render: (row) => <Status status={row.status} /> },
           { key: "actions", label: "Actions", render: (row) => (
             <div className="action-row compact">
-              <button className="btn soft" type="button" onClick={() => {
+              <ActionButton icon="pdf" label="Download receipt PDF" onClick={() => {
                 if (!downloadStudentPaymentReceipt(row, schoolSettings)) setError("Popup was blocked. Please allow popups and try again.");
-              }}>PDF</button>
-              {paymentWriteAllowed && <button className="btn soft" type="button" onClick={() => openModal("payment", row)}>Edit</button>}
+              }} />
+              {paymentWriteAllowed && <ActionButton icon="edit" label="Edit payment" onClick={() => openModal("payment", row)} />}
             </div>
           )},
         ]}
@@ -1173,8 +1186,8 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           { key: "status", label: "Status", render: (row) => <Status status={row.status} /> },
           { key: "actions", label: "Actions", render: (row) => financeAllowed && (
             <div className="action-row compact">
-              <button className="btn soft" type="button" onClick={() => openModal("employee", row)}>Edit</button>
-              {isAdmin && <button className="btn danger" type="button" onClick={() => handleDelete("employee", row._id)}>Delete</button>}
+              <ActionButton icon="edit" label="Edit employee" onClick={() => openModal("employee", row)} />
+              {isAdmin && <ActionButton icon="delete" label="Delete employee" tone="danger" onClick={() => handleDelete("employee", row._id)} />}
             </div>
           )},
         ]}
@@ -1203,7 +1216,7 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           { key: "status", label: "Status", render: (row) => <Status status={row.status} /> },
           { key: "actions", label: "Actions", render: (row) => financeAllowed && (
             <div className="action-row compact">
-              <button className="btn soft" type="button" onClick={() => openModal("employee", row)}>Edit</button>
+              <ActionButton icon="edit" label="Edit teacher assignment" onClick={() => openModal("employee", row)} />
             </div>
           )},
         ]}
@@ -1235,8 +1248,8 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           { key: "score", label: "Final Score", render: (row) => `${row.weightedScore}%` },
           { key: "actions", label: "Actions", render: (row) => teacherAllowed && (
             <div className="action-row compact">
-              <button className="btn soft" type="button" onClick={() => openModal("mark", row)}>Edit</button>
-              <button className="btn danger" type="button" onClick={() => handleDelete("mark", row._id)}>Delete</button>
+              <ActionButton icon="edit" label="Edit mark" onClick={() => openModal("mark", row)} />
+              <ActionButton icon="delete" label="Delete mark" tone="danger" onClick={() => handleDelete("mark", row._id)} />
             </div>
           )},
         ]}
@@ -1349,11 +1362,11 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
               </div>
 
               <div className="report-actions">
-                <button className="btn primary" type="button" onClick={() => {
+                <button className="btn primary icon-text-btn" type="button" onClick={() => {
                   const opened = downloadResultCard(card, schoolSettings);
                   if (!opened) setError("Popup was blocked. Please allow popups and click Download PDF again.");
-                }}>Download PDF</button>
-                {teacherAllowed && <button className="btn soft" type="button" onClick={() => setActiveView("marks")}>Edit Marks</button>}
+                }}><DashboardIcon name="pdf" />Download PDF</button>
+                {teacherAllowed && <button className="btn soft icon-text-btn" type="button" onClick={() => setActiveView("marks")}><DashboardIcon name="edit" />Edit Marks</button>}
               </div>
             </article>
           ))}
@@ -1385,8 +1398,8 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           { key: "status", label: "Status", render: (row) => <Status status={row.status} /> },
           { key: "actions", label: "Actions", render: (row) => teacherAllowed && (
             <div className="action-row compact">
-              <button className="btn soft" type="button" onClick={() => openModal("routine", row)}>Edit</button>
-              <button className="btn danger" type="button" onClick={() => handleDelete("routine", row._id)}>Delete</button>
+              <ActionButton icon="edit" label="Edit routine" onClick={() => openModal("routine", row)} />
+              <ActionButton icon="delete" label="Delete routine" tone="danger" onClick={() => handleDelete("routine", row._id)} />
             </div>
           )},
         ]}
@@ -1417,9 +1430,9 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           { key: "due", label: "Due", render: (row) => money.format(row.dueAmount || 0) },
           { key: "status", label: "Status", render: (row) => <Status status={row.status} /> },
           { key: "actions", label: "PDF", render: (row) => (
-            <button className="btn soft" type="button" onClick={() => {
+            <ActionButton icon="pdf" label="Download salary receipt PDF" onClick={() => {
               if (!downloadSalaryPaymentReceipt(row, schoolSettings)) setError("Popup was blocked. Please allow popups and try again.");
-            }}>PDF</button>
+            }} />
           )},
         ]}
         rows={data.salaries}
@@ -1435,8 +1448,8 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
           { key: "reason", label: "Reason", render: (row) => row.reason || "-" },
           { key: "actions", label: "Actions", render: (row) => financeAllowed && (
             <div className="action-row compact">
-              <button className="btn soft" type="button" onClick={() => openModal("increment", row)}>Edit</button>
-              {isAdmin && <button className="btn danger" type="button" onClick={() => handleDelete("increment", row._id)}>Delete</button>}
+              <ActionButton icon="edit" label="Edit increment" onClick={() => openModal("increment", row)} />
+              {isAdmin && <ActionButton icon="delete" label="Delete increment" tone="danger" onClick={() => handleDelete("increment", row._id)} />}
             </div>
           )},
         ]}

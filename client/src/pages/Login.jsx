@@ -43,6 +43,8 @@ function Icon({ name }) {
     result: <><path d="M5 3h14v18H5V3Z" /><path d="M8 7h8" /><path d="M8 11h8" /><path d="M8 15h4" /><path d="M16 15l1.2 1.2L20 13.5" /></>,
     staff: <><path d="M9 6V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1" /><path d="M4 8h16v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V8Z" /><path d="M4 12h16" /></>,
     cloud: <><path d="M7 18h10a4 4 0 0 0 .7-7.94A6 6 0 0 0 6.15 8.4 4.8 4.8 0 0 0 7 18Z" /><path d="M12 12v6" /><path d="m9.5 15.5 2.5 2.5 2.5-2.5" /></>,
+    menu: <><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></>,
+    close: <><path d="m6 6 12 12" /><path d="M18 6 6 18" /></>,
   };
   return <svg className="home-icon" {...props}>{paths[name] || paths.student}</svg>;
 }
@@ -88,12 +90,20 @@ export default function Login({ onLogin }) {
           </div>
         </a>
         <button className="home-menu-button" type="button" aria-label="Open homepage menu" aria-expanded={isHomeMenuOpen} onClick={() => setIsHomeMenuOpen((value) => !value)}>
-          <span />
-          <span />
-          <span />
+          <Icon name="menu" />
         </button>
         <button className={isHomeMenuOpen ? "home-menu-backdrop show" : "home-menu-backdrop"} type="button" aria-label="Close homepage menu" onClick={closeHomeMenu} />
         <nav className={isHomeMenuOpen ? "pro-nav text-sm open" : "pro-nav text-sm"} aria-label="Homepage navigation">
+          <div className="home-nav-head">
+            <span className="home-nav-mark">SM</span>
+            <div>
+              <strong>School Manager</strong>
+              <small>Smart academic ERP</small>
+            </div>
+            <button className="home-nav-close" type="button" aria-label="Close homepage menu" onClick={closeHomeMenu}>
+              <Icon name="close" />
+            </button>
+          </div>
           <a href="#features" onClick={closeHomeMenu}>Features</a>
           <a href="#workflow" onClick={closeHomeMenu}>Workflow</a>
           <a href="#login" onClick={closeHomeMenu}>Demo Login</a>
