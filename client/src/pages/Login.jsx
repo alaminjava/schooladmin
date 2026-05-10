@@ -52,6 +52,7 @@ export default function Login({ onLogin }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isHomeMenuOpen, setIsHomeMenuOpen] = useState(false);
 
   const loginWithCredentials = async (credentials) => {
     setError("");
@@ -74,6 +75,8 @@ export default function Login({ onLogin }) {
     await loginWithCredentials(form);
   };
 
+  const closeHomeMenu = () => setIsHomeMenuOpen(false);
+
   return (
     <main className="landing-page pro-home min-h-screen bg-slate-50 text-slate-950">
       <header className="pro-home-header border-b border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-xl">
@@ -84,13 +87,20 @@ export default function Login({ onLogin }) {
             <small>Smart academic ERP</small>
           </div>
         </a>
-        <nav className="pro-nav text-sm" aria-label="Homepage navigation">
-          <a href="#features">Features</a>
-          <a href="#workflow">Workflow</a>
-          <a href="#login">Demo Login</a>
-          <a href="#contact">Contact</a>
+        <button className="home-menu-button" type="button" aria-label="Open homepage menu" aria-expanded={isHomeMenuOpen} onClick={() => setIsHomeMenuOpen((value) => !value)}>
+          <span />
+          <span />
+          <span />
+        </button>
+        <button className={isHomeMenuOpen ? "home-menu-backdrop show" : "home-menu-backdrop"} type="button" aria-label="Close homepage menu" onClick={closeHomeMenu} />
+        <nav className={isHomeMenuOpen ? "pro-nav text-sm open" : "pro-nav text-sm"} aria-label="Homepage navigation">
+          <a href="#features" onClick={closeHomeMenu}>Features</a>
+          <a href="#workflow" onClick={closeHomeMenu}>Workflow</a>
+          <a href="#login" onClick={closeHomeMenu}>Demo Login</a>
+          <a href="#contact" onClick={closeHomeMenu}>Contact</a>
+          <a className="pro-nav-demo-link" href="#login" onClick={closeHomeMenu}>Try Demo</a>
         </nav>
-        <a className="pro-header-action shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5" href="#login">Try Demo</a>
+        <a className="pro-header-action shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5" href="#login" onClick={closeHomeMenu}>Try Demo</a>
       </header>
 
       <section className="pro-hero login-first-hero overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-blue-700" id="home">
