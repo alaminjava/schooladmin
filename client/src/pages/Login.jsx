@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api, getErrorMessage } from "../api";
 
@@ -45,6 +45,9 @@ function Icon({ name }) {
     cloud: <><path d="M7 18h10a4 4 0 0 0 .7-7.94A6 6 0 0 0 6.15 8.4 4.8 4.8 0 0 0 7 18Z" /><path d="M12 12v6" /><path d="m9.5 15.5 2.5 2.5 2.5-2.5" /></>,
     menu: <><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></>,
     close: <><path d="m6 6 12 12" /><path d="M18 6 6 18" /></>,
+    workflow: <><path d="M5 6h5" /><path d="M14 6h5" /><path d="M5 12h14" /><path d="M5 18h5" /><path d="M14 18h5" /><path d="M10 6a2 2 0 1 0 4 0 2 2 0 0 0-4 0Z" /><path d="M10 18a2 2 0 1 0 4 0 2 2 0 0 0-4 0Z" /></>,
+    login: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5" /><path d="M21 12H9" /></>,
+    contact: <><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-11Z" /><path d="M8 9h8" /><path d="M8 13h5" /><path d="M8 17h3" /></>,
   };
   return <svg className="home-icon" {...props}>{paths[name] || paths.student}</svg>;
 }
@@ -79,8 +82,23 @@ export default function Login({ onLogin }) {
 
   const closeHomeMenu = () => setIsHomeMenuOpen(false);
 
+  useEffect(() => {
+    if (!isHomeMenuOpen) return undefined;
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") closeHomeMenu();
+    };
+
+    document.body.classList.add("home-menu-lock");
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.body.classList.remove("home-menu-lock");
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isHomeMenuOpen]);
+
   return (
-    <main className="landing-page pro-home min-h-screen bg-slate-50 text-slate-950">
+    <main className={isHomeMenuOpen ? "landing-page pro-home home-menu-open min-h-screen bg-slate-50 text-slate-950" : "landing-page pro-home min-h-screen bg-slate-50 text-slate-950"}>
       <header className="pro-home-header border-b border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-xl">
         <a className="pro-brand" href="#home" aria-label="School Manager home">
           <span className="shadow-lg shadow-blue-600/20">SM</span>
@@ -104,11 +122,11 @@ export default function Login({ onLogin }) {
               <Icon name="close" />
             </button>
           </div>
-          <a href="#features" onClick={closeHomeMenu}>Features</a>
-          <a href="#workflow" onClick={closeHomeMenu}>Workflow</a>
-          <a href="#login" onClick={closeHomeMenu}>Demo Login</a>
-          <a href="#contact" onClick={closeHomeMenu}>Contact</a>
-          <a className="pro-nav-demo-link" href="#login" onClick={closeHomeMenu}>Try Demo</a>
+          <a className="home-nav-link" href="#features" onClick={closeHomeMenu}><Icon name="student" /><span>Features</span></a>
+          <a className="home-nav-link" href="#workflow" onClick={closeHomeMenu}><Icon name="workflow" /><span>Workflow</span></a>
+          <a className="home-nav-link" href="#login" onClick={closeHomeMenu}><Icon name="login" /><span>Demo Login</span></a>
+          <a className="home-nav-link" href="#contact" onClick={closeHomeMenu}><Icon name="contact" /><span>Contact</span></a>
+          <a className="pro-nav-demo-link home-nav-link" href="#login" onClick={closeHomeMenu}><Icon name="login" /><span>Try Demo</span></a>
         </nav>
         <a className="pro-header-action shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5" href="#login" onClick={closeHomeMenu}>Try Demo</a>
       </header>
