@@ -6990,3 +6990,68 @@ body {
     min-width: 560px !important;
   }
 }
+
+/* Modal/app chrome correction: only homepage nav is sticky; forms stay above sidebar. */
+.pro-home-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 120 !important;
+}
+
+.erp-topbar.clean-topbar {
+  position: relative !important;
+  top: auto !important;
+  z-index: 20 !important;
+}
+
+.erp-sidebar.premium-sidebar {
+  z-index: 30 !important;
+}
+
+.sidebar-toggle.fixed-toggle {
+  z-index: 35 !important;
+}
+
+.modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 260 !important;
+  padding: clamp(12px, 2vw, 24px) !important;
+}
+
+.modal-card {
+  position: relative !important;
+  z-index: 261 !important;
+  width: min(1180px, calc(100vw - 28px)) !important;
+  max-height: min(92svh, 920px) !important;
+}
+
+.modal-body,
+.modal-form,
+.form-grid,
+.profile-grid {
+  min-width: 0 !important;
+}
+
+@media (max-width: 960px) {
+  .erp-topbar.clean-topbar {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  .modal-card {
+    width: min(760px, calc(100vw - 20px)) !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .modal-backdrop {
+    align-items: end !important;
+    padding: 8px !important;
+  }
+
+  .modal-card {
+    width: 100% !important;
+    max-height: 94svh !important;
+  }
+}
