@@ -141,6 +141,11 @@ function DashboardIcon({ name, className = "" }) {
     delete: <><path d="M4 7h16" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M6 7l1 14h10l1-14" /><path d="M9 7V4h6v3" /></>,
     pdf: <><path d="M6 3.5h8l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z" /><path d="M14 3.5v4h4" /><path d="M8 15h1.3a1.3 1.3 0 0 0 0-2.6H8V17" /><path d="M12 17v-4.6h1.1a2.3 2.3 0 0 1 0 4.6H12Z" /><path d="M16 17v-4.6h2" /><path d="M16 14.6h1.6" /></>,
     settings: <><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" /><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.04.04a2 2 0 0 1-2.83 2.83l-.04-.04A1.7 1.7 0 0 0 15 19.37a1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.08A1.7 1.7 0 0 0 9 19.37a1.7 1.7 0 0 0-1.88.34l-.04.04a2 2 0 0 1-2.83-2.83l.04-.04A1.7 1.7 0 0 0 4.63 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.08A1.7 1.7 0 0 0 4.63 9a1.7 1.7 0 0 0-.34-1.88l-.04-.04a2 2 0 0 1 2.83-2.83l.04.04A1.7 1.7 0 0 0 9 4.63a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.08A1.7 1.7 0 0 0 15 4.63a1.7 1.7 0 0 0 1.88-.34l.04-.04a2 2 0 0 1 2.83 2.83l-.04.04A1.7 1.7 0 0 0 19.37 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.08A1.7 1.7 0 0 0 19.4 15Z" /></>,
+    sun: <><path d="M12 4V2" /><path d="M12 22v-2" /><path d="M4 12H2" /><path d="M22 12h-2" /><path d="m4.93 4.93-1.41-1.41" /><path d="m20.48 20.48-1.41-1.41" /><path d="m4.93 19.07-1.41 1.41" /><path d="m20.48 3.52-1.41 1.41" /><path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /></>,
+    moon: <><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z" /></>,
+    school: <><path d="M4 10 12 5l8 5" /><path d="M6 11v8h12v-8" /><path d="M10 19v-5h4v5" /><path d="M3 19h18" /></>,
+    refresh: <><path d="M20 6v5h-5" /><path d="M4 18v-5h5" /><path d="M18.2 9A7 7 0 0 0 6.4 6.4L4 8.8" /><path d="M5.8 15A7 7 0 0 0 17.6 17.6L20 15.2" /></>,
+    lock: <><path d="M7 10V7a5 5 0 0 1 10 0v3" /><path d="M5 10h14v10H5V10Z" /><path d="M12 14v2" /></>,
   };
 
   return <svg {...props}>{icons[name] || icons.chart}</svg>;
@@ -166,7 +171,25 @@ function StatCard({ helper, icon = "chart", label, tone = "blue", value }) {
 }
 
 function Status({ status }) {
-  return <span className={`status ${status}`}>{status || "active"}</span>;
+  const safeStatus = String(status || "active").toLowerCase();
+  const statusClass = safeStatus.replace(/\s+/g, "-");
+  const label = safeStatus.replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+  return (
+    <span aria-label={label} className={`status dot-status ${statusClass}`} title={label}>
+      <span className="sr-only">{label}</span>
+    </span>
+  );
+}
+
+function BooleanDot({ value, trueLabel = "Yes", falseLabel = "No" }) {
+  const label = value ? trueLabel : falseLabel;
+
+  return (
+    <span aria-label={label} className={`status dot-status ${value ? "active" : "inactive"}`} title={label}>
+      <span className="sr-only">{label}</span>
+    </span>
+  );
 }
 
 function GradeBadge({ grade }) {
@@ -1179,7 +1202,7 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
         columns={[
           { key: "name", label: "Employee", render: (row) => <div><strong>{row.name}</strong><small className="capitalize">{row.role}</small></div> },
           { key: "assignment", label: "Assignment", render: (row) => row.role === "teacher" ? `${row.assignedClass || "No class"} / ${row.subject || "No subject"}` : "-" },
-          { key: "classTeacher", label: "Class Teacher", render: (row) => row.isClassTeacher ? <Status status="active" /> : <span className="status inactive">No</span> },
+          { key: "classTeacher", label: "Class Teacher", render: (row) => <BooleanDot value={row.isClassTeacher} /> },
           { key: "salaryType", label: "Salary Type", render: (row) => <span className="capitalize">{row.salaryType}</span> },
           { key: "salary", label: "Salary", render: (row) => money.format(row.salaryAmount || 0) },
           { key: "due", label: "Due Salary", render: (row) => <strong className="danger-text">{money.format(row.dueSalary || 0)}</strong> },
@@ -1485,37 +1508,37 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
       />
       <section className="settings-grid">
         <article className="settings-card panel">
-          <span className="settings-icon">👤</span>
+          <span className="settings-icon"><DashboardIcon name="profile" /></span>
           <h3>User Profile</h3>
           <p>Change your name, email, photo, and password.</p>
           <button className="btn soft" type="button" onClick={() => openModal("userSettings")}>Edit Profile</button>
         </article>
         <article className="settings-card panel">
-          <span className="settings-icon">{theme === "dark" ? "🌙" : "☀️"}</span>
+          <span className="settings-icon"><DashboardIcon name={theme === "dark" ? "moon" : "sun"} /></span>
           <h3>Appearance</h3>
           <p>Switch between light and dark mode.</p>
           <button className="btn dark" type="button" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? "Use Light Mode" : "Use Dark Mode"}</button>
         </article>
         <article className="settings-card panel">
-          <span className="settings-icon">🏫</span>
+          <span className="settings-icon"><DashboardIcon name="school" /></span>
           <h3>School Settings</h3>
           <p>Set school name, logos, contact details, academic year, and report text.</p>
           {isAdmin ? <button className="btn warn" type="button" onClick={() => openModal("schoolSettings")}>Edit School</button> : <small>Admin only</small>}
         </article>
         <article className="settings-card panel">
-          <span className="settings-icon">📄</span>
+          <span className="settings-icon"><DashboardIcon name="pdf" /></span>
           <h3>Report Cards</h3>
           <p>Control report title, principal name, pass mark, and default remarks.</p>
           {isAdmin ? <button className="btn soft" type="button" onClick={() => openModal("schoolSettings")}>Report Settings</button> : <small>Admin only</small>}
         </article>
         <article className="settings-card panel">
-          <span className="settings-icon">🔐</span>
+          <span className="settings-icon"><DashboardIcon name="lock" /></span>
           <h3>Security</h3>
           <p>Update password from your profile settings.</p>
           <button className="btn soft" type="button" onClick={() => openModal("userSettings")}>Change Password</button>
         </article>
         <article className="settings-card panel">
-          <span className="settings-icon">🔄</span>
+          <span className="settings-icon"><DashboardIcon name="refresh" /></span>
           <h3>Data Refresh</h3>
           <p>Reload dashboard data after changing records.</p>
           <button className="btn success" type="button" onClick={refresh}>Refresh Data</button>

@@ -127,6 +127,13 @@ export default function Login({ onLogin }) {
           <a className="home-nav-link" href="#login" onClick={closeHomeMenu}><Icon name="login" /><span>Demo Login</span></a>
           <a className="home-nav-link" href="#contact" onClick={closeHomeMenu}><Icon name="contact" /><span>Contact</span></a>
           <a className="pro-nav-demo-link home-nav-link" href="#login" onClick={closeHomeMenu}><Icon name="login" /><span>Try Demo</span></a>
+          <div className="home-nav-profile">
+            <img alt="Md. Al Amin Hossain" src="/owner-alamin.png" />
+            <span>
+              <strong>Md. Al Amin Hossain</strong>
+              <small>School Manager Owner</small>
+            </span>
+          </div>
         </nav>
         <a className="pro-header-action shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5" href="#login" onClick={closeHomeMenu}>Try Demo</a>
       </header>

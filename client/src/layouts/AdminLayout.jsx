@@ -66,6 +66,7 @@ function Icon({ name }) {
     help: <><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.6 2.6 0 0 1 4.8 1.4c0 1.9-2.4 2.1-2.4 4"/><path d="M12 18h.01"/></>,
     logout: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></>,
     close: <><path d="m6 6 12 12"/><path d="M18 6 6 18"/></>,
+    chevron: <><path d="m6 9 6 6 6-6"/></>,
   };
   return <svg {...props}>{icons[name] || icons.dashboard}</svg>;
 }
@@ -257,7 +258,7 @@ export default function AdminLayout({ activeView, children, onLogout, onOpenUser
               <button className="topbar-user-chip user-menu-trigger border border-slate-200 bg-white shadow-sm hover:bg-slate-50" type="button" onClick={() => setIsUserMenuOpen((value) => !value)}>
                 <UserAvatar user={user} small />
                 <strong>{user?.name || "User"}</strong>
-                <span className="menu-chevron">v</span>
+                <span className="menu-chevron"><Icon name="chevron" /></span>
               </button>
               {isUserMenuOpen && (
                 <div className="user-menu-panel overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
