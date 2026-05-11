@@ -1,9 +1,18 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+
+function PageLoader() {
+  return (
+    <main className="route-loader" aria-live="polite">
+      <span>Loading...</span>
+    </main>
+  );
+}
 
 function App() {
   const [session, setSession] = useState(() => {
@@ -70,7 +79,9 @@ function App() {
           path="/dashboard"
           element={
             session ? (
-              <Dashboard token={session.token} user={session.user} onLogout={handleLogout} onUserUpdate={handleUserUpdate} />
+              <Suspense fallback={<PageLoader />}>
+                <Dashboard token={session.token} user={session.user} onLogout={handleLogout} onUserUpdate={handleUserUpdate} />
+              </Suspense>
             ) : (
               <Navigate to="/" replace />
             )

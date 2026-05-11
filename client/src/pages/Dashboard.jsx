@@ -547,8 +547,11 @@ function downloadSalaryPaymentReceipt(salary, settings) {
   return writePrintDocument(printWindow, salaryPaymentReceiptHtml(salary, settings));
 }
 
+const tablePageSize = 80;
+
 function DataTable({ columns, rows, title, subtitle, searchable = true, searchPlaceholder = "Search records..." }) {
   const [query, setQuery] = useState("");
+  const [visibleCount, setVisibleCount] = useState(tablePageSize);
   const filteredRows = useMemo(() => {
     const safeRows = rows || [];
     const keyword = query.trim().toLowerCase();
@@ -567,6 +570,12 @@ function DataTable({ columns, rows, title, subtitle, searchable = true, searchPl
       return searchableText.includes(keyword);
     });
   }, [columns, query, rows]);
+  const visibleRows = useMemo(() => filteredRows.slice(0, visibleCount), [filteredRows, visibleCount]);
+  const hiddenRows = Math.max(filteredRows.length - visibleRows.length, 0);
+
+  useEffect(() => {
+    setVisibleCount(tablePageSize);
+  }, [query, rows]);
 
   return (
     <div className="table-card smart-table-card">
@@ -589,7 +598,7 @@ function DataTable({ columns, rows, title, subtitle, searchable = true, searchPl
           <tr>{columns.map((column) => <th key={column.key}>{column.label}</th>)}</tr>
         </thead>
         <tbody>
-          {filteredRows.length ? filteredRows.map((row, index) => (
+          {filteredRows.length ? visibleRows.map((row, index) => (
             <tr key={row._id || row.id || `${row.feature || row.name || "row"}-${row.className || row.subject || index}`}>
               {columns.map((column) => <td key={column.key}>{column.render(row)}</td>)}
             </tr>
@@ -598,6 +607,14 @@ function DataTable({ columns, rows, title, subtitle, searchable = true, searchPl
           )}
         </tbody>
       </table>
+      {hiddenRows > 0 && (
+        <div className="table-load-more">
+          <span>Showing {visibleRows.length} of {filteredRows.length}</span>
+          <button className="btn soft" type="button" onClick={() => setVisibleCount((count) => count + tablePageSize)}>
+            Show more
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -926,18 +943,38 @@ export default function Dashboard({ token, user, onLogout, onUserUpdate }) {
     }
   }
 
-  const paidCollection = data.payments.reduce((total, row) => total + Number(row.paidAmount || 0), 0);
-  const visibleDue = data.payments.reduce((total, row) => total + Number(row.dueAmount || 0), 0);
-  const totalBilled = paidCollection + visibleDue;
-  const collectionRate = totalBilled ? Math.round((paidCollection / totalBilled) * 100) : 0;
-  const activeStudents = data.students.filter((student) => student.status !== "inactive").length;
-  const activeEmployees = data.employees.filter((employee) => employee.status !== "inactive").length;
-  const todayRoutineSlots = data.routines.filter((routine) => routine.status !== "inactive").length;
-  const dueStudents = data.students.filter((student) => Number(student.dueAmount || 0) > 0).length;
-  const visibleDueRows = data.payments.filter((payment) => Number(payment.dueAmount || 0) > 0).length;
+  const dashboardMetrics = useMemo(() => {
+    const paidCollection = data.payments.reduce((total, row) => total + Number(row.paidAmount || 0), 0);
+    const visibleDue = data.payments.reduce((total, row) => total + Number(row.dueAmount || 0), 0);
+    const totalBilled = paidCollection + visibleDue;
+
+    return {
+      activeEmployees: data.employees.reduce((total, employee) => total + (employee.status !== "inactive" ? 1 : 0), 0),
+      activeStudents: data.students.reduce((total, student) => total + (student.status !== "inactive" ? 1 : 0), 0),
+      collectionRate: totalBilled ? Math.round((paidCollection / totalBilled) * 100) : 0,
+      dueStudents: data.students.reduce((total, student) => total + (Number(student.dueAmount || 0) > 0 ? 1 : 0), 0),
+      paidCollection,
+      todayRoutineSlots: data.routines.reduce((total, routine) => total + (routine.status !== "inactive" ? 1 : 0), 0),
+      visibleDue,
+      visibleDueRows: data.payments.reduce((total, payment) => total + (Number(payment.dueAmount || 0) > 0 ? 1 : 0), 0),
+    };
+  }, [data.employees, data.payments, data.routines, data.students]);
+  const {
+    activeEmployees,
+    activeStudents,
+    collectionRate,
+    dueStudents,
+    paidCollection,
+    todayRoutineSlots,
+    visibleDue,
+    visibleDueRows,
+  } = dashboardMetrics;
 
   const schoolSettings = data.schoolSettings || emptyForms.schoolSettings;
-  const resultCards = useMemo(() => buildResultCards(data.marks, data.students), [data.marks, data.students]);
+  const resultCards = useMemo(() => {
+    if (activeView !== "resultCards") return [];
+    return buildResultCards(data.marks, data.students);
+  }, [activeView, data.marks, data.students]);
   const resultCardStudents = useMemo(() => {
     const map = new Map();
     resultCards.forEach((card) => {

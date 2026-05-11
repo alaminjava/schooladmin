@@ -720,6 +720,32 @@ td small {
   padding: 20px;
 }
 
+.route-loader {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  background: #f8fafc;
+  color: #155eef;
+  font-weight: 900;
+}
+
+.table-load-more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  background: #f8fafc;
+}
+
+.table-load-more span {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .modal-form {
   display: grid;
   gap: 18px;
