@@ -2,9 +2,9 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Register = lazy(() => import("./pages/Register"));
 
 function PageLoader() {
   return (
@@ -71,7 +71,9 @@ function App() {
             session ? (
               <Navigate to="/dashboard" replace />
             ) : (
-              <Register onRegister={setSession} />
+              <Suspense fallback={<PageLoader />}>
+                <Register onRegister={setSession} />
+              </Suspense>
             )
           }
         />

@@ -18,5 +18,13 @@ export default defineConfig({
   build: {
     outDir: "dist",
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          router: ["react-router-dom"],
+          http: ["axios"],
+        },
+      },
+    },
   },
 });

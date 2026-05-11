@@ -8023,3 +8023,38 @@ body.home-menu-lock {
   background: #ef4444 !important;
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12) !important;
 }
+
+@media (max-width: 760px) {
+  .landing-nav,
+  .pro-home-header,
+  .hero-login-card,
+  .pro-login-card,
+  .workflow-panel,
+  .pro-feature-grid article,
+  .metric-card,
+  .stat-card,
+  .panel,
+  .table-card,
+  .erp-topbar,
+  .mobile-menu-drawer,
+  .pro-nav {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .hero-login-card,
+  .pro-login-card,
+  .workflow-panel,
+  .pro-feature-grid article,
+  .metric-card,
+  .stat-card,
+  .panel,
+  .table-card {
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+  }
+
+  .pro-hero,
+  .login-first-hero {
+    background: #0b2c6f !important;
+  }
+}

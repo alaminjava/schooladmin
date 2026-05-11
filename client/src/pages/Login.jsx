@@ -128,7 +128,7 @@ export default function Login({ onLogin }) {
           <a className="home-nav-link" href="#contact" onClick={closeHomeMenu}><Icon name="contact" /><span>Contact</span></a>
           <a className="pro-nav-demo-link home-nav-link" href="#login" onClick={closeHomeMenu}><Icon name="login" /><span>Try Demo</span></a>
           <div className="home-nav-profile">
-            <img alt="Md. Al Amin Hossain" src="/owner-alamin.png" />
+            <img alt="Md. Al Amin Hossain" decoding="async" src="/owner-alamin-small.jpg" />
             <span>
               <strong>Md. Al Amin Hossain</strong>
               <small>School Manager Owner</small>
@@ -237,7 +237,7 @@ export default function Login({ onLogin }) {
           <span>Professional school management system for academic, finance, and result operations.</span>
         </div>
         <div className="footer-owner">
-          <img alt="Md. Al Amin Hossain" src="/owner-alamin.png" />
+          <img alt="Md. Al Amin Hossain" decoding="async" loading="lazy" src="/owner-alamin-small.jpg" />
           <span>
             <strong>Md. Al Amin Hossain</strong>
             <a href="https://github.com/alaminjava" target="_blank" rel="noreferrer">github.com/alaminjava</a>
