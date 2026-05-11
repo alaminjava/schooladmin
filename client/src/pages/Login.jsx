@@ -101,7 +101,7 @@ export default function Login({ onLogin }) {
     <main className={isHomeMenuOpen ? "landing-page pro-home home-menu-open min-h-screen bg-slate-50 text-slate-950" : "landing-page pro-home min-h-screen bg-slate-50 text-slate-950"}>
       <header className="pro-home-header border-b border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-xl">
         <a className="pro-brand" href="#home" aria-label="School Manager home">
-          <span className="shadow-lg shadow-blue-600/20">SM</span>
+          <span className="brand-logo-mark shadow-lg shadow-blue-600/20"><img alt="" src="/app-logo.png" /></span>
           <div>
             <strong>School Manager</strong>
             <small>Smart academic ERP</small>
@@ -113,7 +113,7 @@ export default function Login({ onLogin }) {
         <button className={isHomeMenuOpen ? "home-menu-backdrop show" : "home-menu-backdrop"} type="button" aria-label="Close homepage menu" onClick={closeHomeMenu} />
         <nav className={isHomeMenuOpen ? "pro-nav text-sm open" : "pro-nav text-sm"} aria-label="Homepage navigation">
           <div className="home-nav-head">
-            <span className="home-nav-mark">SM</span>
+            <span className="home-nav-mark"><img alt="" src="/app-logo.png" /></span>
             <div>
               <strong>School Manager</strong>
               <small>Smart academic ERP</small>

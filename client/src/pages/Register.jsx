@@ -28,6 +28,7 @@ export default function Register({ onRegister }) {
     <main className="auth-page single">
       <section className="auth-card-wrap">
         <form className="auth-card register-card" onSubmit={handleSubmit}>
+          <img className="auth-logo" alt="School Manager" src="/app-logo.png" />
           <p className="eyebrow">School Manager</p>
           <h2>Create account</h2>
           <p>Create a student account. Admin users can create staff, teacher, accounts, and audit users from the protected admin tools.</p>

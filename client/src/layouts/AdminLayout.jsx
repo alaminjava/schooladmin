@@ -161,6 +161,13 @@ export default function AdminLayout({ activeView, children, onLogout, onOpenUser
         </button>
 
         <div className="sidebar-head modern-sidebar-head">
+          <div className="app-brand-simple" aria-label="School Manager">
+            <img alt="" src="/app-logo.png" />
+            <div>
+              <strong>School Manager</strong>
+              <small>Academic ERP</small>
+            </div>
+          </div>
           <div className="sidebar-user-simple rounded-2xl border border-white/10 bg-white/10 p-3 shadow-xl">
             <UserAvatar user={user} />
             <div className="sidebar-user-copy">
@@ -200,6 +207,13 @@ export default function AdminLayout({ activeView, children, onLogout, onOpenUser
       <button aria-label="Close navigation menu" className="mobile-menu-backdrop" type="button" onClick={() => setIsMobileMenuOpen(false)} />
       <aside id="mobile-app-menu" aria-label="Mobile navigation" className="mobile-menu-drawer" aria-hidden={!isMobileMenuOpen}>
         <div className="mobile-menu-head">
+          <div className="app-brand-simple">
+            <img alt="" src="/app-logo.png" />
+            <div>
+              <strong>School Manager</strong>
+              <small>Academic ERP</small>
+            </div>
+          </div>
           <div className="sidebar-user-simple">
             <UserAvatar user={user} />
             <div className="sidebar-user-copy">
